@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PicoPlacaApp</string>
+    <string name="msm_superior">Favor ingrese la hora, fecha y placa que desea consultar:</string>
+    <string name="format_time">HH:mm</string>
+    <string name="format_date">18/11/2019</string>
+    <string name="format_license_plate">ABC-1234</string>
+    <string name="consultar">CONSULTAR</string>
+    <string name="msm_error_placa_vacia">Favor introducir el numero de Placa</string>
+    <string name="msm_error_formato_placa_incorrecto">Favor ingresar el numero de placa con el formato: ABC-1234</string>
+    <string name="version">Version x.x.x</string>
+</resources>
