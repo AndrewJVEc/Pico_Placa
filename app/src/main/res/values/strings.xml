@@ -8,4 +8,11 @@
     <string name="msm_error_placa_vacia">Favor introducir el numero de Placa</string>
     <string name="msm_error_formato_placa_incorrecto">Favor ingresar el numero de placa con el formato: ABC-1234</string>
     <string name="version">Version x.x.x</string>
+
+    <string-array name="pico_placa_times">
+        <item>06:59</item>
+        <item>09:31</item>
+        <item>15:59</item>
+        <item>19:31</item>
+    </string-array>
 </resources>

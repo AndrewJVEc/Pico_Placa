@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.picoplacaapp.functions.CommonFunctions;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,8 +43,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     int month;
     int day;
     int hours;
+    int minutes;
     boolean openNave;
     SimpleDateFormat format;
+    String time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +99,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public void setDateAndTime() {
         Calendar cal = Calendar.getInstance();
         toDay = cal.getTime();
-        String minutesString = "";
-        int minutes = cal.get(Calendar.MINUTE);
-
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DAY_OF_MONTH);
@@ -112,13 +112,8 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             }
         });
 
-        txtTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TimePickerDialog time = new TimePickerDialog(MainActivity.this, MainActivity.this, 12, 0, false);
-                time.show();
-            }
-        });
+        String minutesString = "";
+        minutes = cal.get(Calendar.MINUTE);
 
         if (minutes < 10) {
             minutesString = "0" + minutes;
@@ -126,7 +121,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             minutesString = String.valueOf(minutes);
         }
         txtDate.setText(format.format(toDay));
-        txtTime.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + minutesString);
+        hours = cal.get(Calendar.HOUR_OF_DAY);
+        time = hours + ":" + minutesString;
+        txtTime.setText(time);
+
+        txtTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog time = new TimePickerDialog(MainActivity.this, MainActivity.this, hours, minutes, false);
+                time.show();
+            }
+        });
     }
 
     @Override
@@ -141,23 +146,47 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        String time = (String.format(Locale.getDefault(), "%1$02d:%2$02d", hour, minute));
+        time = (String.format(Locale.getDefault(), "%1$02d:%2$02d", hour, minute));
         txtTime.setText(time);
-
         hours = hour;
+        minutes = minute;
     }
 
     public void checkLicensePlate() {
-        if (CommonFunctions.verifyCorrectDataIntroduced(this,edtPlaca.getText().toString())) {
+        if (CommonFunctions.verifyCorrectDataIntroduced(this, edtPlaca.getText().toString())) {
             Toast.makeText(this, "Verificando info", Toast.LENGTH_SHORT).show();
 
-            String placa= edtPlaca.getText().toString();
-            String last = String.valueOf(placa.charAt(placa.length()-1));
+            verifyCirculationTime();
+
+            String placa = edtPlaca.getText().toString();
+            String last = String.valueOf(placa.charAt(placa.length() - 1));
 
             Toast.makeText(this, last, Toast.LENGTH_SHORT).show();
-
         }
 
+    }
+
+    public boolean verifyCirculationTime() {
+        String[] picoplacaTimes = getResources().getStringArray(R.array.pico_placa_times);
+        String pattern = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        Date[] date = new Date[4];
+
+        try {
+            Date timeDate = sdf.parse(time);
+            for (int i = 0; i < picoplacaTimes.length; i++) {
+                date[i] = sdf.parse(picoplacaTimes[i]);
+            }
+            if (timeDate != null && ((timeDate.after(date[0]) && timeDate.before(date[1])) || (timeDate.after(date[2]) && timeDate.before(date[3])))) {
+                Toast.makeText(this, "Te encuentras en horario de pico y placa", Toast.LENGTH_SHORT).show();
+                return true;
+
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private void hideKeyBoard() {
@@ -166,12 +195,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         );
     }
 
-    public void getVersion(){
+    public void getVersion() {
         PackageInfo pInfo = null;
         try {
             pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             String versionCurrent = pInfo.versionName;
-            txtVersion.setText("Version: "+versionCurrent);
+            txtVersion.setText("Version: " + versionCurrent);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
