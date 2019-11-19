@@ -5,5 +5,7 @@
     <color name="colorAccent">#ed9526</color>
 
     <color name="background_dialog">#ffb744</color>
+    <color name="free_circulation">#8dd147</color>
+    <color name="no_circulation">#ff6247</color>
 
 </resources>

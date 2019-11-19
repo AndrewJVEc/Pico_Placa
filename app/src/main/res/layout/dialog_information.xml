@@ -3,7 +3,7 @@
     android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="@drawable/back_rectangle_rounded_white"
+    android:background="@drawable/background_navigation_rounded"
     android:orientation="vertical"
     android:paddingTop="24dp"
     android:paddingStart="24dp"
@@ -20,6 +20,11 @@
         android:text="@string/informacion"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="30sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/txtContent"
@@ -39,7 +44,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@drawable/rounded_white_timer"
+        android:background="@drawable/btn_orange"
         android:fontFamily="@font/century_gothic"
         android:text="@string/aceptar"
         android:textColor="@android:color/white"

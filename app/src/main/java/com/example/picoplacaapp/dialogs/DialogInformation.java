@@ -35,15 +35,19 @@ public class DialogInformation extends DialogFragment {
 
         String title = "";
         String content = "";
+        String type = "";
         if (getArguments() != null) {
             title = getArguments().getString("TITLE_VALUE");
             content = getArguments().getString("CONTENT_VALUE");
+            type = getArguments().getString("TYPE");
         }
 
         if (title != null && !title.isEmpty() && content != null && !content.isEmpty()) {
             txtTitle.setText(title);
             txtContent.setText(content);
         }
+
+        verifyType(type);
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +57,20 @@ public class DialogInformation extends DialogFragment {
         });
 
         return dialog;
+    }
+
+    private void verifyType(String type) {
+        switch (type) {
+            case "alto":
+                txtContent.setTextColor(getContext().getResources().getColor(R.color.no_circulation));
+                break;
+            case "medio":
+                txtContent.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+                break;
+            case "bajo":
+                txtContent.setTextColor(getContext().getResources().getColor(R.color.free_circulation));
+                break;
+        }
     }
 
     private void initializeItems(Dialog dialog) {

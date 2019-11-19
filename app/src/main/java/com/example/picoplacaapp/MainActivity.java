@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
 
 import com.example.picoplacaapp.dialogs.DialogInformation;
 import com.example.picoplacaapp.functions.CommonFunctions;
@@ -30,13 +33,13 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    ImageView imgMenu;
+    ImageView imgInfo;
     LinearLayout navPane;
+    RelativeLayout btnCheck;
     TextView txtDate;
     TextView txtTime;
     TextView txtVersion;
     EditText edtPlaca;
-    RelativeLayout btnCheck;
 
     Date toDay;
     int year;
@@ -57,13 +60,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         setContentView(R.layout.activity_main);
 
         initializeItems();
-        setMenu();
         setDateAndTime();
     }
 
     public void initializeItems() {
-        imgMenu = findViewById(R.id.imgMenu);
-        navPane = findViewById(R.id.navPane);
+        imgInfo = findViewById(R.id.imgInfo);
         txtDate = findViewById(R.id.txtDate);
         txtTime = findViewById(R.id.txtTime);
         txtVersion = findViewById(R.id.txtVersion);
@@ -80,23 +81,15 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             }
         });
 
-        hideKeyBoard();
-        getVersion();
-    }
-
-    public void setMenu() {
-        imgMenu.setOnClickListener(new View.OnClickListener() {
+        imgInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!openNave) {
-                    navPane.setVisibility(View.VISIBLE);
-                    openNave = true;
-                } else {
-                    navPane.setVisibility(View.GONE);
-                    openNave = false;
-                }
+                onClickNavigate();
             }
         });
+
+        hideKeyBoard();
+        getVersion();
     }
 
     public void setDateAndTime() {
@@ -166,12 +159,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
             if (verifyDay()) {
                 if (verifyCirculationTime()) {
-                    createDialogAlert(getString(R.string.alert), getString(R.string.picoplaca_positive));
+                    createDialogAlert(getString(R.string.alert), getString(R.string.picoplaca_positive), "alto");
                 } else {
-                    createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_middle));
+                    createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_middle), "medio");
                 }
             } else {
-                createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_negative));
+                createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_negative), "bajo");
             }
 
 
@@ -192,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             }
             if (timeDate != null && ((timeDate.after(date[0]) && timeDate.before(date[1])) || (timeDate.after(date[2]) && timeDate.before(date[3])))) {
                 return true;
-
             }
 
         } catch (ParseException e) {
@@ -215,11 +207,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         return (dayOfWeek == 6 && numLicensePlate == 0);
     }
 
-    public void createDialogAlert(String title, String message) {
+    public void createDialogAlert(String title, String message, String type) {
         DialogInformation dialogInformation = new DialogInformation();
         Bundle arguments = new Bundle();
         arguments.putString("TITLE_VALUE", title);
         arguments.putString("CONTENT_VALUE", message);
+        arguments.putString("TYPE", type);
         dialogInformation.setArguments(arguments);
         dialogInformation.show(getSupportFragmentManager(), "MainActivity");
     }
@@ -252,6 +245,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         }
 
         return daySelected;
+    }
+
+    public void onClickNavigate() {
+        int color = ContextCompat.getColor(getBaseContext(), R.color.colorPrimary);
+        String url = "http://www.ecuadorlegalonline.com/consultas/secretaria-movilidad-quito/horario-pico-y-placa-quito/";
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(color);
+        builder.setStartAnimations(this, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        builder.setExitAnimations(this, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(this, Uri.parse(url));
     }
 
     public void hideKeyBoard() {
