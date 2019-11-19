@@ -1,13 +1,21 @@
 <resources>
-    <string name="app_name">PicoPlacaApp</string>
+    <string name="app_name">PicoPlaca</string>
     <string name="msm_superior">Favor ingrese la hora, fecha y placa que desea consultar:</string>
     <string name="format_time">HH:mm</string>
     <string name="format_date">18/11/2019</string>
     <string name="format_license_plate">ABC-1234</string>
     <string name="consultar">CONSULTAR</string>
-    <string name="msm_error_placa_vacia">Favor introducir el numero de Placa</string>
-    <string name="msm_error_formato_placa_incorrecto">Favor ingresar el numero de placa con el formato: ABC-1234</string>
+    <string name="msm_error_placa_vacia">Favor introducir el número de Placa</string>
+    <string name="msm_error_formato_placa_incorrecto">Formato de placa incorrecto. \nFavor ingresar el número de placa con el formato: ABC-1234</string>
     <string name="version">Version x.x.x</string>
+    <string name="informacion">Información</string>
+    <string name="texto_de_informacion">Texto de información</string>
+    <string name="aceptar">ACEPTAR</string>
+    <string name="alert">Alerta</string>
+    <string name="picoplaca_positive">Posees pico y placa en este día</string>
+    <string name="mensaje_alert">Mensaje</string>
+    <string name="picoplaca_middle">Posees pico y placa en este día, pero te encuentras fuera de horario</string>
+    <string name="picoplaca_negative">No posees pico y placa en el día seleccionado</string>
 
     <string-array name="pico_placa_times">
         <item>06:59</item>

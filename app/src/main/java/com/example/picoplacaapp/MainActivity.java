@@ -14,10 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.picoplacaapp.dialogs.DialogInformation;
 import com.example.picoplacaapp.functions.CommonFunctions;
 
 import java.text.ParseException;
@@ -42,11 +42,14 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     int year;
     int month;
     int day;
+    int dayOfWeek;
     int hours;
     int minutes;
+    int numLicensePlate;
     boolean openNave;
     SimpleDateFormat format;
     String time;
+    String daySelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DAY_OF_MONTH);
+        dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         } else {
             minutesString = String.valueOf(minutes);
         }
-        txtDate.setText(format.format(toDay));
+        txtDate.setText(setDaySelected() + " " + format.format(toDay));
         hours = cal.get(Calendar.HOUR_OF_DAY);
         time = hours + ":" + minutesString;
         txtTime.setText(time);
@@ -138,10 +142,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         Calendar calendarActual = new GregorianCalendar(i, i1, i2);
         toDay = calendarActual.getTime();
-        txtDate.setText(format.format(toDay));
         year = i;
         month = i1;
         day = i2;
+        dayOfWeek = calendarActual.get(Calendar.DAY_OF_WEEK);
+        txtDate.setText(setDaySelected() + " " + format.format(toDay));
     }
 
     @Override
@@ -154,14 +159,22 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public void checkLicensePlate() {
         if (CommonFunctions.verifyCorrectDataIntroduced(this, edtPlaca.getText().toString())) {
-            Toast.makeText(this, "Verificando info", Toast.LENGTH_SHORT).show();
-
-            verifyCirculationTime();
 
             String placa = edtPlaca.getText().toString();
             String last = String.valueOf(placa.charAt(placa.length() - 1));
+            numLicensePlate = Integer.parseInt(last);
 
-            Toast.makeText(this, last, Toast.LENGTH_SHORT).show();
+            if (verifyDay()) {
+                if (verifyCirculationTime()) {
+                    createDialogAlert(getString(R.string.alert), getString(R.string.picoplaca_positive));
+                } else {
+                    createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_middle));
+                }
+            } else {
+                createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_negative));
+            }
+
+
         }
 
     }
@@ -178,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 date[i] = sdf.parse(picoplacaTimes[i]);
             }
             if (timeDate != null && ((timeDate.after(date[0]) && timeDate.before(date[1])) || (timeDate.after(date[2]) && timeDate.before(date[3])))) {
-                Toast.makeText(this, "Te encuentras en horario de pico y placa", Toast.LENGTH_SHORT).show();
                 return true;
 
             }
@@ -189,7 +201,60 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         return false;
     }
 
-    private void hideKeyBoard() {
+    public boolean verifyDay() {
+        int i = 2;
+
+        for (int j = 1; j < 10; j++) {
+            if (dayOfWeek == i && (numLicensePlate == j || numLicensePlate == j + 1)) {
+                return true;
+            }
+            j++;
+            i++;
+        }
+
+        return (dayOfWeek == 6 && numLicensePlate == 0);
+    }
+
+    public void createDialogAlert(String title, String message) {
+        DialogInformation dialogInformation = new DialogInformation();
+        Bundle arguments = new Bundle();
+        arguments.putString("TITLE_VALUE", title);
+        arguments.putString("CONTENT_VALUE", message);
+        dialogInformation.setArguments(arguments);
+        dialogInformation.show(getSupportFragmentManager(), "MainActivity");
+    }
+
+    public String setDaySelected() {
+        switch (dayOfWeek) {
+            case 1:
+                daySelected = "Dom";
+                break;
+            case 2:
+                daySelected = "Lun";
+                break;
+            case 3:
+                daySelected = "Mar";
+                break;
+            case 4:
+                daySelected = "Mie";
+                break;
+            case 5:
+                daySelected = "Jue";
+                break;
+            case 6:
+                daySelected = "Vie";
+                break;
+            case 7:
+                daySelected = "Sab";
+                break;
+            default:
+                break;
+        }
+
+        return daySelected;
+    }
+
+    public void hideKeyBoard() {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
