@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,7 +33,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     ImageView imgInfo;
-    LinearLayout navPane;
     RelativeLayout btnCheck;
     TextView txtDate;
     TextView txtTime;
@@ -49,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     int hours;
     int minutes;
     int numLicensePlate;
-    boolean openNave;
     SimpleDateFormat format;
     String time;
     String daySelected;
@@ -71,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         edtPlaca = findViewById(R.id.edtPlaca);
         btnCheck = findViewById(R.id.btnCheck);
 
-        openNave = false;
         format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         btnCheck.setOnClickListener(new View.OnClickListener() {
@@ -166,8 +162,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             } else {
                 createDialogAlert(getString(R.string.mensaje_alert), getString(R.string.picoplaca_negative), "bajo");
             }
-
-
         }
 
     }
@@ -249,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public void onClickNavigate() {
         int color = ContextCompat.getColor(getBaseContext(), R.color.colorPrimary);
-        String url = "http://www.ecuadorlegalonline.com/consultas/secretaria-movilidad-quito/horario-pico-y-placa-quito/";
+        String url = getString(R.string.url_ecuador_pico_placa);
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         builder.setToolbarColor(color);
         builder.setStartAnimations(this, android.R.anim.slide_in_left, android.R.anim.slide_out_right);

@@ -16,6 +16,7 @@
     <string name="mensaje_alert">Mensaje</string>
     <string name="picoplaca_middle">Posees pico y placa en este día, pero te encuentras fuera de horario</string>
     <string name="picoplaca_negative">No posees pico y placa en el día seleccionado</string>
+    <string name="url_ecuador_pico_placa">http://www.ecuadorlegalonline.com/consultas/secretaria-movilidad-quito/horario-pico-y-placa-quito/</string>
 
     <string-array name="pico_placa_times">
         <item>06:59</item>

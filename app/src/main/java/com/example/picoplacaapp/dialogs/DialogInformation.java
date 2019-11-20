@@ -30,12 +30,12 @@ public class DialogInformation extends DialogFragment {
         dialog.setCanceledOnTouchOutside(true);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-
         initializeItems(dialog);
 
         String title = "";
         String content = "";
         String type = "";
+
         if (getArguments() != null) {
             title = getArguments().getString("TITLE_VALUE");
             content = getArguments().getString("CONTENT_VALUE");
@@ -47,7 +47,9 @@ public class DialogInformation extends DialogFragment {
             txtContent.setText(content);
         }
 
-        verifyType(type);
+        if (type != null) {
+            verifyType(type);
+        }
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +71,8 @@ public class DialogInformation extends DialogFragment {
                 break;
             case "bajo":
                 txtContent.setTextColor(getContext().getResources().getColor(R.color.free_circulation));
+                break;
+            default:
                 break;
         }
     }
